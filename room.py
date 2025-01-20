@@ -95,5 +95,5 @@ Une pièce a un nom, une description, des sorties, des objets, des personnages,.
         else:
             pnj = "il y a les personnages :\n"
             for characters in self.characters.values():
-                pnj += f"  - {characters.name}  {characters.description}"
+                pnj += f"\n  - {characters.name}  {characters.description} , personnage {characters.status}"
             return pnj

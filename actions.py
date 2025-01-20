@@ -2,7 +2,9 @@
 # The MSG1 variable is used when the command takes 1 parameter.
 MSG1="\nLa commande'{command_word}'prend 1 seul paramètre.\n"
 """
-from player import Player
+from player import Player 
+import random 
+
 # Description: The actions module.
 
 #The actions module contains the functions that are called when a command is executed.
@@ -19,8 +21,10 @@ MSG0="\nLa commande'{command_word}'ne prend pas de paramètre.\n"
 # The MSG1 variable is used when the command takes 1 parameter.
 MSG1="\nLa commande'{command_word}'prend 1 seul paramètre.\n"
 """ 
-on définit la class action pour mettre les mouvement pouvant etre effectuer 
-"""
+on définit la class action pour mettre les mouvement pouvant etre effectuer  
+
+""" 
+
 class Actions:
     """
         définition des actions effectuers
@@ -230,11 +234,21 @@ class Actions:
             return False
         else:
             if list_of_words[1] in game.player.current_room.objet.keys():
-                item_name1 = list_of_words[1]
-                itemfrom = game.player.current_room.objet[item_name1]
-                game.player.inventory[item_name1] = itemfrom
+                if list_of_words[1]=='canapeche':
+                    if game.player.recuperer==False:
+                        print('\nHisoka a volé la canapeche! Vous devez le combattre')
+                    else:
+                        item_name1 = list_of_words[1]
+                        itemfrom = game.player.current_room.objet[item_name1]
+                        game.player.inventory[item_name1] = itemfrom
+                        del game.player.current_room.objet[item_name1]
+                else:
+                    item_name1 = list_of_words[1]
+                    itemfrom = game.player.current_room.objet[item_name1]
+                    game.player.inventory[item_name1] = itemfrom
             # print(game.player.inventory)
-                del game.player.current_room.objet[list_of_words[1]]
+                    del game.player.current_room.objet[list_of_words[1]]
+                
                 if 'pass' in game.player.inventory:
                     print('\nBravo vous êtes devenus un véritable hunter')
                     game.finished=True
@@ -264,7 +278,7 @@ class Actions:
                 del game.player.inventory[list_of_words[1]]
             else:
                 print("Entrez un objet valide")
-    def combat(self, characters):
+    def combat(self, game,characters):
         """ Méthode pour le combat avec un ennemi. """
         print(f"Vous êtes face à {characters.name}! Une chance sur 3 de survivre si vous attaquez.")
         
@@ -276,7 +290,8 @@ class Actions:
             chance = random.randint(1, 3)  # Génère un nombre entre 1 et 3
 
             if chance != 3 :
-                print("Vous avez réussi à vaincre l'ennemi ! Vous pouvez continuer vers la prochaine salle.")
+                print("Vous avez réussi à vaincre Hisoka, la canapeche est à vous.")
+                game.player.recuperer=True
                 return True  # Le joueur gagne, il peut passer à la prochaine salle
             else:
                 print("C'est perdu. L'ennemi vous a vaincu.")

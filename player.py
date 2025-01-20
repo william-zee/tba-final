@@ -1,5 +1,6 @@
 "Fichier Player" 
-import random 
+import random
+from characters import Characters
 class Player():
     "Classe Player qui définit toutes les méthodes et les attributs du joueur"
     # Define the constructor.
@@ -9,7 +10,9 @@ class Player():
         self.history = []
         self.inventory = {}
         self.has_looked = False
-        self.scan_status = 0
+        self.recuperer=False
+        self.scan_status = 0 
+        self.characters = []
 
         if starting_room is not None:
             self.history.append(starting_room)
@@ -50,7 +53,7 @@ class Player():
         # Récupère la pièce suivante à partir des sorties.
         next_room = self.current_room.exits[direction]
 
-        # Si la pièce suivante est None, afficher une erreur. j'ai changer ici pour le combat
+        # Si la pièce suivante est None, afficher une erreur.
         if next_room is None:
             print("\nAucune porte dans cette direction !\n")
             return False
@@ -59,20 +62,7 @@ class Player():
             return False
 
     # Vérifie s'il y a des ennemis dans la salle suivante.      
-        enemy = next_room.characters.get('Hisoka')  # On suppose qu'un ennemi est défini sous la clé "ennemi"
-        if enemy=="ennemis":
-            print(f"Un combat s'engage avec {enemy.name}!")
-        
-            action = input("Voulez-vous attaquer ? (Tapez 'attack' pour attaquer, ou autre pour fuir) : ").lower()
 
-            if action == "attack":
-                 # Si l'utilisateur tape 'attack', lancer le combat
-                if not self.combat(enemy):  # Si le combat échoue, on ne déplace pas le joueur.
-                    print("Vous avez perdu le combat et ne pouvez pas avancer.")
-                    return False  # Si le joueur perd le combat, il ne peut pas continuer
-            else:
-                    print("Vous avez choisi de fuir l'ennemi.")
-                    return False  # Si le joueur choisit de fuir, on arrête et ne le déplace pas
 
       
         
@@ -84,7 +74,10 @@ class Player():
             if hasattr(next_room, 'portails') and next_room.portails.open_status is False:
                 print("\nLa Salle menant à cette direction est bloquée depuis 'ruelle'.\n")
                 return False
-        
+            
+        for character in self.characters:
+            if isinstance(character, Characters) and character.name == "Examinateur":
+                character.follow(next_room)
         # Si tout est ok, ajoute la pièce actuelle à l'historique.
         self.history.append(self.current_room)
 
@@ -129,6 +122,8 @@ class Player():
 
             if chance != 3 :
                 print("Vous avez réussi à vaincre l'ennemi ! Vous pouvez continuer vers la prochaine salle.")
+                print("Vous avez réussi à vaincre Hisoka, la canapeche est à vous.")
+                self.recuperer=True
                 return True  # Le joueur gagne, il peut passer à la prochaine salle
             else:
                 print("C'est perdu. L'ennemi vous a vaincu.")

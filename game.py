@@ -103,10 +103,10 @@ class Game:
         examinateur =Characters(
             "Examinateur",
             "Il vous surveille",
-            toura,
+            tunnel,
             ["Regarde autour de toi"],
             "neutre")
-        toura.characters[examinateur.name] = examinateur
+        tunnel.characters[examinateur.name] = examinateur
         hisoka =Characters(
             "Hisoka",
             "Une aura puissante émane de lui...",
