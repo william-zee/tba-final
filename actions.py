@@ -234,11 +234,13 @@ class Actions:
                 itemfrom = game.player.current_room.objet[item_name1]
                 game.player.inventory[item_name1] = itemfrom
             # print(game.player.inventory)
-            del game.player.current_room.objet[list_of_words[1]]
-            if 'pass' in game.player.inventory:
-                print('\nBravo vous êtes devenus un véritable hunter')
-                game.finished=True
-                return True
+                del game.player.current_room.objet[list_of_words[1]]
+                if 'pass' in game.player.inventory:
+                    print('\nBravo vous êtes devenus un véritable hunter')
+                    game.finished=True
+                    return True
+            else:
+                print("Entrez un objet Valide")
 
     def drop(game, list_of_words, number_of_parameters):
         """
@@ -262,12 +264,30 @@ class Actions:
                 del game.player.inventory[list_of_words[1]]
             else:
                 print("Entrez un objet valide")
+    def combat(self, characters):
+        """ Méthode pour le combat avec un ennemi. """
+        print(f"Vous êtes face à {characters.name}! Une chance sur 3 de survivre si vous attaquez.")
+        
+        # Demande à l'utilisateur d'attaquer.
+        action = input("Que voulez-vous faire ? (Écrivez 'attack' pour attaquer) ").strip().lower()
+
+        if action == "attack":
+            # Génère un nombre aléatoire pour déterminer si le joueur survit (1 chance sur 3).
+            chance = random.randint(1, 3)  # Génère un nombre entre 1 et 3
+
+            if chance != 3 :
+                print("Vous avez réussi à vaincre l'ennemi ! Vous pouvez continuer vers la prochaine salle.")
+                return True  # Le joueur gagne, il peut passer à la prochaine salle
+            else:
+                print("C'est perdu. L'ennemi vous a vaincu.")
+                return False  # Le joueur perd
+        else:
+            print("Vous avez choisi de ne pas attaquer. Vous avez perdu votre chance.")
+            return False  # Le joueur n'attaque pas et perd le combat
 
     def talk(game, list_of_words, number_of_parameters):
         """
-        Parle  au pnj avec un argeument nécessaire
-            
-    
+        Parle au PNJ avec un argument nécessaire
         """
         player = game.player
         l = len(list_of_words)
@@ -287,24 +307,53 @@ class Actions:
         if character_name in player_room.characters:
             character = player_room.characters[character_name]
 
-            # Si le personnage est 'Mamie', gère un cas spécifique
+            # Cas spécifique pour Mamie
             if character_name == 'Mamie':
+                # Vérifier si la conversation est déjà terminée
                 if hasattr(character, 'conversation_done') and character.conversation_done:
-                    print("Mamie ne souhaite plus discuter.Elle a terminé sa conversation.")
+                    print("Mamie ne souhaite plus discuter. Elle a terminé sa conversation.")
                     return True  # La conversation est terminée, donc on ne refait rien
 
                 print(f"Le joueur parle à {character_name}")
                 character.get_msg()  # Afficher le message du personnage
                 response = input("\nQuelle est votre réponse?: ")
 
-                # Si la réponse vide, débloque un portail et marque la conversation comme terminée
+                # Si la réponse est vide, débloque un portail et marque la conversation comme terminée
                 if response == "":
                     print("Bravo, vous avez donné la bonne réponse, allez au nord.")
                     game.portails[player.scan_status].open_status = True
                     character.conversation_done = True  # Marquer que la conversation est terminée
+                    return True
                 else:
                     print("Ce n'est pas la bonne réponse. Mamie vous met un mawashi geri\nGameOver")
-                    game.finished=True
+                    game.finished = True  # Mettre fin au jeu si la réponse est incorrecte
+                    return False
+
+            # Cas pour Hisoka (le combat)
+            elif character_name == 'Hisoka':
+                print(f"Le joueur parle à {character_name}")
+                character.get_msg()  # Afficher le message du personnage
+                response = input("\nQuelle est votre réponse?: ")
+
+                if response == "oui":
+                    print("Hisoka a très mal pris cette défiance.")
+                    print(f"Un combat s'engage avec Hisoka!")
+
+                    action = input("Voulez-vous attaquer ? (Tapez 'attack' pour attaquer, ou autre pour fuir) : ").lower()
+
+                    if action == "attack":
+                        # Si l'utilisateur tape 'attack', lancer le combat
+                        if not game.player.combat(character):  # Si le combat échoue, on ne déplace pas le joueur.
+                            print("Vous avez perdu le combat et ne pouvez pas avancer.")
+                            return False  # Si le joueur perd le combat, il ne peut pas continuer
+                    else:
+                        print("Vous avez choisi de fuir l'ennemi.")
+                        return False  # Si le joueur choisit de fuir, rien ne se passe
+
+                else:
+                    print("Hisoka vous met un mawashi geri\nGameOver")
+                    game.finished = True
+                    return False
 
             else:
                 # Pour tout autre personnage, afficher son message
@@ -312,10 +361,9 @@ class Actions:
                 character.get_msg()  # Appeler la méthode get_msg() du personnage
 
             return True
-
         else:
-            print(f"\nIl n'y a pas de personnage nommé '{character_name}' ici.\n")
-            return False
+                print(f"\nIl n'y a pas de personnage nommé '{character_name}' ici.\n")
+                return False
     def get_inventory(game,list_of_words, number_of_parameters):
         """
         regarde l'inventaire du joueur

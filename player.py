@@ -14,7 +14,7 @@ class Player():
         if starting_room is not None:
             self.history.append(starting_room)
     # Define the move method.
-    def can_move_to(self, next_room):
+    def can_move_to(self, next_room,direction):
         """
         Vérifie si le joueur peut se déplacer vers la salle donnée en fonction des objets
         ou conditions spéciales requises.
@@ -25,10 +25,10 @@ class Player():
         Retourne:
             bool: True si le joueur peut se déplacer, False sinon.
         """
-        if self.current_room.name == 'ile':
+        next_room = self.current_room.exits[direction]
+        if self.current_room.name == 'ile' and next_room.name=='Tour aux astuces':
             # Exemple pour la salle 'ile' : le joueur doit posséder une canne à pêche.
             if not any(item == "canapeche" for item in self.inventory):
-                print("Vous devez avoir une canne à pêche pour accéder à cette direction depuis 'île'.")
                 return False
 
     # Ajouter ici d'autres vérifications pour d'autres salles et conditions
@@ -54,17 +54,13 @@ class Player():
         if next_room is None:
             print("\nAucune porte dans cette direction !\n")
             return False
-        if not self.can_move_to(next_room):
-            print("Vous ne pouvez pas vous déplacer vers cette salle pour une raison quelconque.")
+        if not self.can_move_to(next_room,direction):
+            print("Vous ne pouvez pas vous déplacer vers cette salle pour le moment.")
             return False
 
-    # Vérifie s'il y a des ennemis dans la salle suivante.
-        
-        
-     
-            
-        enemy = next_room.characters.get("Golem")  # On suppose qu'un ennemi est défini sous la clé "ennemi"
-        if enemy:
+    # Vérifie s'il y a des ennemis dans la salle suivante.      
+        enemy = next_room.characters.get('Hisoka')  # On suppose qu'un ennemi est défini sous la clé "ennemi"
+        if enemy=="ennemis":
             print(f"Un combat s'engage avec {enemy.name}!")
         
             action = input("Voulez-vous attaquer ? (Tapez 'attack' pour attaquer, ou autre pour fuir) : ").lower()
@@ -81,7 +77,7 @@ class Player():
       
         
         #Vérifie si il peut accéder à la prochaine room en ayant l'item en question
-        if not self.can_move_to(next_room):
+        if not self.can_move_to(next_room,direction):
             return False
         # Si la pièce actuelle est "ruelle", vérifie si la direction mène à une salle bloquée.
         if self.current_room.name == 'ruelle':
@@ -110,7 +106,7 @@ class Player():
             inventory_description += f"  - {name} : {item}\n"
         return inventory_description
     def get_history(self):
-        "Méthode permettant de voir son"
+        "Méthode permettant de voir son historique"
         if not self.history:
             return "Aucune pièce visitée pour le moment."
         history_s="vous avez visité"
@@ -120,9 +116,9 @@ class Player():
     
 
 # la aussi changer 
-    def combat(self, enemy):
+    def combat(self, characters):
         """ Méthode pour le combat avec un ennemi. """
-        print(f"Vous êtes face à {enemy.name}! Une chance sur 3 de survivre si vous attaquez.")
+        print(f"Vous êtes face à {characters.name}! Une chance sur 3 de survivre si vous attaquez.")
         
         # Demande à l'utilisateur d'attaquer.
         action = input("Que voulez-vous faire ? (Écrivez 'attack' pour attaquer) ").strip().lower()

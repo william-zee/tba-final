@@ -71,7 +71,7 @@ class Game:
         self.rooms.append(tunnel)
         escalier= Room("escalier", " un escalier mystérieux qui s'élève ou s'enfonce dans l'obscurité.")
         self.rooms.append(escalier)
-        toura = Room("Tour aux astuces", "un défi où chaque étage cache des pièges, des énigmes")
+        toura = Room("Tour aux astuces", "un défi où chaque étage cache des pièges et des énigmes")
         self.rooms.append(toura)
         swamp = Room("Swamp", " un marécage sombre et ténébreux,les abords sont vaseux.")
         self.rooms.append(swamp)
@@ -84,7 +84,10 @@ class Game:
         canapeche=Item("canapeche","La canne à pêche: la meilleur arme",3)
         ile.add(canapeche)
         passhunter=Item("pass","Titre de Hunter: La récompense ultime",3)
-        toura.add(passhunter) 
+        toura.add(passhunter)
+        chaine=Item("chaine","Chaine capable de tuer des ennemis",3)
+        ruelle.add(chaine)  
+
 
     #SETUP Personnage changer aussi
        
@@ -93,20 +96,28 @@ class Game:
             "Mamie",
             "Une vieille accompagnée de gardes",
             ruelle,
-            ["Voici l'énigme: Qui souhaites tu sauver entre ta bien-aimée et ta mère"]
+            ["Voici l'énigme: Qui souhaites tu sauver entre ta bien-aimée et ta mère"],
+            "neutre"
             ) 
         ruelle.characters[mamie.name] = mamie
         examinateur =Characters(
             "Examinateur",
             "Il vous surveille",
             toura,
-            ["Regarde autour de toi"])
+            ["Regarde autour de toi"],
+            "neutre")
         toura.characters[examinateur.name] = examinateur
-    
-    
+        hisoka =Characters(
+            "Hisoka",
+            "Une aura puissante émane de lui...",
+            ile,
+            ["T'as un problème?"],
+            "ennemis")
+        ile.characters[hisoka.name] = hisoka
+
     # Create enemy
-        golem = Ennemis("Golem", "Un monstre fait de pierre, menaçant et terrifiant.")
-        ile.characters[golem.name]=golem
+        #hisoka = Ennemis("Hisoka", "Une aura puissante émane de lui.")
+        #ile.characters[hisoka.name]=hisoka
 
     # Create exits for rooms
         forest.exits = {"N" : None, "E" : swamp, "S" : None, "O" : None,"U" : escalier,"D" :None}

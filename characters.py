@@ -16,7 +16,7 @@ class Characters:
         msg (list): Liste des messages que le personnage peut dire.
         msg_history (list): Historique des messages déjà affichés.
     """
-    def __init__(self, name, description,current_room,msg):
+    def __init__(self, name, description,current_room,msg,status):
         """
         Initialise un personnage avec un nom, une description, une salle et un messages.
         
@@ -31,6 +31,7 @@ class Characters:
         self.current_room = current_room
         self.msg = msg
         self.msg_history = []
+        self.status= status
     def __str__(self):
         """
         Retourne une représentation sous forme de chaîne de caractères du personnage,

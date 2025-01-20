@@ -1,5 +1,5 @@
 class Ennemis:
-    def __init__(self, name, description):
+    def __init__(self, name, description,get_msg):
         self.name = name
         self.description = description
 
