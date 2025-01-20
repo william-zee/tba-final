@@ -2,7 +2,8 @@
 importer le module random pour faire une réaslisation aléatoire
     """
 import random
-
+# pylint: disable=too-many-arguments
+# pylint: disable=too-many-positional-arguments
 class Characters:
     """
     Représente un personnage dans un jeu. Chaque personnage a un nom, une description,
@@ -77,11 +78,6 @@ class Characters:
     #     self.current_room = next_room
     #     self.current_room.characters[self.name] = self
     #     print(f"{self.name} s'est déplacé dans {self.current_room.name}.")
-    def follow(self, room):
-        """Le PNJ suit le joueur dans la nouvelle salle."""
-        self.current_room = room
-        print(f"{self.name} vous suit dans {room.name}.")
-
     def get_msg(self):
         """
         Permet au personnage de dire un message. Le message est retiré de la liste `msg` et 

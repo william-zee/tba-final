@@ -1,6 +1,6 @@
 "Fichier Player" 
 import random
-from characters import Characters
+
 class Player():
     "Classe Player qui définit toutes les méthodes et les attributs du joueur"
     # Define the constructor.
@@ -11,7 +11,7 @@ class Player():
         self.inventory = {}
         self.has_looked = False
         self.recuperer=False
-        self.characters = []
+        self.scan_status=0
 
         if starting_room is not None:
             self.history.append(starting_room)
@@ -51,7 +51,7 @@ class Player():
 
         # Récupère la pièce suivante à partir des sorties.
         next_room = self.current_room.exits[direction]
-
+        next_room = self.current_room.get_exit(direction)
         # Si la pièce suivante est None, afficher une erreur.
         if next_room is None:
             print("\nAucune porte dans cette direction !\n")
@@ -69,11 +69,6 @@ class Player():
             print("\nLa Salle menant à cette direction est bloquée depuis 'ruelle'.\n")
             return False
 
-        # Si des ennemis doivent suivre le joueur, les faire suivre.
-        for character in self.characters:
-            if isinstance(character, Characters) and character.name == "Examinateur":
-                character.follow(next_room)
-
         # Ajoute la pièce actuelle à l'historique.
         self.history.append(self.current_room)
 
@@ -84,7 +79,6 @@ class Player():
         print(self.current_room.get_long_description())
 
         return True
-
 
     def get_inventory(self):
         "Méthode permettant de regarder son inventaire"
@@ -112,7 +106,7 @@ class Player():
         print(f"Vous êtes face à {characters.name}! Une chance sur 3 de survivre si vous attaquez.")
 
         # Demande à l'utilisateur d'attaquer.
-        action = input("Que voulez-vous faire ? (Écrivez 'attack' pour attaquer) ").strip().lower()
+        action = input("(Écrivez 'attack' pour attaquer) ou autre pour fuir: ").strip().lower()
 
         if action == "attack":
             # Génère un nombre aléatoire pour déterminer si le joueur survit (1 chance sur 3).

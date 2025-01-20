@@ -68,9 +68,9 @@ class Game:
         self.rooms.append(forest)
         tunnel = Room("tunnel", " un tunnel sinueux,seule ta détermination te sortira indemne.")
         self.rooms.append(tunnel)
-        escalier= Room("escalier", " un escalier mystérieux qui s'élève ou s'enfonce dans l'obscurité.")
+        escalier= Room("escalier", " un escalier mystérieux qui s'élève ou s'enfonce dans le noir.")
         self.rooms.append(escalier)
-        toura = Room("Tour aux astuces", "un défi où chaque étage cache des pièges et des énigmes")
+        toura = Room("Tour aux astuces", "sommet d'une tour")
         self.rooms.append(toura)
         swamp = Room("Swamp", " un marécage sombre et ténébreux,les abords sont vaseux.")
         self.rooms.append(swamp)
@@ -85,11 +85,11 @@ class Game:
         passhunter=Item("pass","Titre de Hunter: La récompense ultime",3)
         toura.add(passhunter)
         chaine=Item("chaine","Chaine capable de tuer des ennemis",3)
-        ruelle.add(chaine)  
+        ruelle.add(chaine)
 
 
     #SETUP Personnage changer aussi
-       
+
 
         mamie=Characters(
             "Mamie",
@@ -97,15 +97,15 @@ class Game:
             ruelle,
             ["Voici l'énigme: Qui souhaites tu sauver entre ta bien-aimée et ta mère"],
             "neutre"
-            ) 
+            )
         ruelle.characters[mamie.name] = mamie
         examinateur =Characters(
             "Examinateur",
             "Il vous surveille",
-            tunnel,
+            toura,
             ["Regarde autour de toi"],
             "neutre")
-        tunnel.characters[examinateur.name] = examinateur
+        toura.characters[examinateur.name] = examinateur
         hisoka =Characters(
             "Hisoka",
             "Une aura puissante émane de lui...",
@@ -113,10 +113,6 @@ class Game:
             ["T'as un problème?"],
             "ennemis")
         ile.characters[hisoka.name] = hisoka
-
-    # Create enemy
-        #hisoka = Ennemis("Hisoka", "Une aura puissante émane de lui.")
-        #ile.characters[hisoka.name]=hisoka
 
     # Create exits for rooms
         forest.exits = {"N" : None, "E" : swamp, "S" : None, "O" : None,"U" : escalier,"D" :None}
@@ -173,7 +169,7 @@ class Game:
         "Fonction permettant d'accueillir le joueur avec un message"
         print(f"\nBienvenue {self.player.name}, à l'Examen des Hunters!")
         print("Entrez 'help' si vous avez besoin d'aide.")
-        print(self.player.current_room.get_long_description()) 
+        print(self.player.current_room.get_long_description())
 def main():
     "Fonction main permettant d'éxécuter le jeu"
     # Create a game object and play the game

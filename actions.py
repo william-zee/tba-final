@@ -359,7 +359,8 @@ class Actions:
                     if action == "attack":
                         # Si l'utilisateur tape 'attack', lancer le combat
                         if not game.player.combat(character):  # Si le combat échoue, on ne déplace pas le joueur.
-                            print("Vous avez perdu le combat et ne pouvez pas avancer.")
+                            print("Vous avez perdu le combat, l'examinateur vous disqualifie.")
+                            game.finished=True
                             return False  # Si le joueur perd le combat, il ne peut pas continuer
                     else:
                         print("Vous avez choisi de fuir l'ennemi.")
