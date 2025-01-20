@@ -1,4 +1,5 @@
-"Fichier Player"
+"Fichier Player" 
+import random 
 class Player():
     "Classe Player qui définit toutes les méthodes et les attributs du joueur"
     # Define the constructor.
@@ -49,10 +50,36 @@ class Player():
         # Récupère la pièce suivante à partir des sorties.
         next_room = self.current_room.exits[direction]
 
-        # Si la pièce suivante est None, afficher une erreur.
+        # Si la pièce suivante est None, afficher une erreur. j'ai changer ici pour le combat
         if next_room is None:
             print("\nAucune porte dans cette direction !\n")
             return False
+        if not self.can_move_to(next_room):
+            print("Vous ne pouvez pas vous déplacer vers cette salle pour une raison quelconque.")
+            return False
+
+    # Vérifie s'il y a des ennemis dans la salle suivante.
+        
+        
+     
+            
+        enemy = next_room.characters.get("Golem")  # On suppose qu'un ennemi est défini sous la clé "ennemi"
+        if enemy:
+            print(f"Un combat s'engage avec {enemy.name}!")
+        
+            action = input("Voulez-vous attaquer ? (Tapez 'attack' pour attaquer, ou autre pour fuir) : ").lower()
+
+            if action == "attack":
+                 # Si l'utilisateur tape 'attack', lancer le combat
+                if not self.combat(enemy):  # Si le combat échoue, on ne déplace pas le joueur.
+                    print("Vous avez perdu le combat et ne pouvez pas avancer.")
+                    return False  # Si le joueur perd le combat, il ne peut pas continuer
+            else:
+                    print("Vous avez choisi de fuir l'ennemi.")
+                    return False  # Si le joueur choisit de fuir, on arrête et ne le déplace pas
+
+      
+        
         #Vérifie si il peut accéder à la prochaine room en ayant l'item en question
         if not self.can_move_to(next_room):
             return False
@@ -89,4 +116,27 @@ class Player():
         history_s="vous avez visité"
         for room in self.history:
             history_s+= f"{room.description}"
-        return history_s
+        return history_s 
+    
+
+# la aussi changer 
+    def combat(self, enemy):
+        """ Méthode pour le combat avec un ennemi. """
+        print(f"Vous êtes face à {enemy.name}! Une chance sur 3 de survivre si vous attaquez.")
+        
+        # Demande à l'utilisateur d'attaquer.
+        action = input("Que voulez-vous faire ? (Écrivez 'attack' pour attaquer) ").strip().lower()
+
+        if action == "attack":
+            # Génère un nombre aléatoire pour déterminer si le joueur survit (1 chance sur 3).
+            chance = random.randint(1, 3)  # Génère un nombre entre 1 et 3
+
+            if chance != 3 :
+                print("Vous avez réussi à vaincre l'ennemi ! Vous pouvez continuer vers la prochaine salle.")
+                return True  # Le joueur gagne, il peut passer à la prochaine salle
+            else:
+                print("C'est perdu. L'ennemi vous a vaincu.")
+                return False  # Le joueur perd
+        else:
+            print("Vous avez choisi de ne pas attaquer. Vous avez perdu votre chance.")
+            return False  # Le joueur n'attaque pas et perd le combat

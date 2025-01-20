@@ -6,7 +6,7 @@ from actions import Actions
 from item import Item
 from characters import Characters
 from portail import Portail
-
+from ennemis import Ennemis
 class Game:
     """
         Initializes the Game class with default values:
@@ -84,15 +84,17 @@ class Game:
         canapeche=Item("canapeche","La canne à pêche: la meilleur arme",3)
         ile.add(canapeche)
         passhunter=Item("pass","Titre de Hunter: La récompense ultime",3)
-        toura.add(passhunter)
+        toura.add(passhunter) 
 
-    #SETUP Personnage
+    #SETUP Personnage changer aussi
+       
+
         mamie=Characters(
             "Mamie",
             "Une vieille accompagnée de gardes",
             ruelle,
             ["Voici l'énigme: Qui souhaites tu sauver entre ta bien-aimée et ta mère"]
-            )
+            ) 
         ruelle.characters[mamie.name] = mamie
         examinateur =Characters(
             "Examinateur",
@@ -100,6 +102,12 @@ class Game:
             toura,
             ["Regarde autour de toi"])
         toura.characters[examinateur.name] = examinateur
+    
+    
+    # Create enemy
+        golem = Ennemis("Golem", "Un monstre fait de pierre, menaçant et terrifiant.")
+        ile.characters[golem.name]=golem
+
     # Create exits for rooms
         forest.exits = {"N" : None, "E" : swamp, "S" : None, "O" : None,"U" : escalier,"D" :None}
         toura.exits = {"N" : None, "E" : None, "S" : None, "O" : None,"U" : None,"D" :ile}
