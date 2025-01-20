@@ -11,7 +11,6 @@ class Player():
         self.inventory = {}
         self.has_looked = False
         self.recuperer=False
-        self.scan_status = 0 
         self.characters = []
 
         if starting_room is not None:
@@ -57,28 +56,25 @@ class Player():
         if next_room is None:
             print("\nAucune porte dans cette direction !\n")
             return False
-        if not self.can_move_to(next_room,direction):
+
+        # Vérifie si le joueur peut se déplacer vers la prochaine salle.
+        if not self.can_move_to(next_room, direction):
             print("Vous ne pouvez pas vous déplacer vers cette salle pour le moment.")
             return False
 
-    # Vérifie s'il y a des ennemis dans la salle suivante.      
-
-
-      
-        
-        #Vérifie si il peut accéder à la prochaine room en ayant l'item en question
-        if not self.can_move_to(next_room,direction):
-            return False
         # Si la pièce actuelle est "ruelle", vérifie si la direction mène à une salle bloquée.
-        if self.current_room.name == 'ruelle':
-            if hasattr(next_room, 'portails') and next_room.portails.open_status is False:
-                print("\nLa Salle menant à cette direction est bloquée depuis 'ruelle'.\n")
-                return False
-            
+        if self.current_room.name == 'ruelle' and \
+            hasattr(next_room, 'portails') and \
+            next_room.portails.open_status is False:
+            print("\nLa Salle menant à cette direction est bloquée depuis 'ruelle'.\n")
+            return False
+
+        # Si des ennemis doivent suivre le joueur, les faire suivre.
         for character in self.characters:
             if isinstance(character, Characters) and character.name == "Examinateur":
                 character.follow(next_room)
-        # Si tout est ok, ajoute la pièce actuelle à l'historique.
+
+        # Ajoute la pièce actuelle à l'historique.
         self.history.append(self.current_room)
 
         # Déplace le joueur dans la nouvelle pièce.
@@ -86,7 +82,9 @@ class Player():
 
         # Affiche la description détaillée de la nouvelle pièce.
         print(self.current_room.get_long_description())
+
         return True
+
 
     def get_inventory(self):
         "Méthode permettant de regarder son inventaire"
@@ -105,14 +103,14 @@ class Player():
         history_s="vous avez visité"
         for room in self.history:
             history_s+= f"{room.description}"
-        return history_s 
-    
+        return history_s
 
-# la aussi changer 
+
+# la aussi changer
     def combat(self, characters):
         """ Méthode pour le combat avec un ennemi. """
         print(f"Vous êtes face à {characters.name}! Une chance sur 3 de survivre si vous attaquez.")
-        
+
         # Demande à l'utilisateur d'attaquer.
         action = input("Que voulez-vous faire ? (Écrivez 'attack' pour attaquer) ").strip().lower()
 
@@ -121,13 +119,13 @@ class Player():
             chance = random.randint(1, 3)  # Génère un nombre entre 1 et 3
 
             if chance != 3 :
-                print("Vous avez réussi à vaincre l'ennemi ! Vous pouvez continuer vers la prochaine salle.")
+                print("Vous avez réussi à vaincre l'ennemi ! Allez vers la prochaine salle.")
                 print("Vous avez réussi à vaincre Hisoka, la canapeche est à vous.")
                 self.recuperer=True
                 return True  # Le joueur gagne, il peut passer à la prochaine salle
-            else:
-                print("C'est perdu. L'ennemi vous a vaincu.")
-                return False  # Le joueur perd
-        else:
-            print("Vous avez choisi de ne pas attaquer. Vous avez perdu votre chance.")
-            return False  # Le joueur n'attaque pas et perd le combat
+
+            print("C'est perdu. L'ennemi vous a vaincu.")
+            return False  # Le joueur perd
+
+        print("Vous avez choisi de ne pas attaquer. Vous avez perdu votre chance.")
+        return False  # Le joueur n'attaque pas et perd le combat

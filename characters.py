@@ -41,8 +41,6 @@ class Characters:
             str: Une chaîne formatée représentant le personnage.
         """
         return f"{self.name} : {self.description} ({self.msg}, {self.status})"
-  
-    
 
     def move(self):
         """
@@ -70,8 +68,8 @@ class Characters:
             print(f"{self.name} ne se déplace pas.")
     # def follow(self,game):
     #     """
-    #     Permet au personnage de se déplacer aléatoirement dans une salle adjacente, 
-    #     si une telle salle existe. Si aucune salle adjacente n'est disponible, 
+    #     Permet au personnage de se déplacer aléatoirement dans une salle adjacente,
+    #     si une telle salle existe. Si aucune salle adjacente n'est disponible,
     #     il reste dans sa salle actuelle.
     #     """
     #     next_room = game.player.next_room

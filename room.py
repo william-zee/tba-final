@@ -2,7 +2,7 @@
 Ce module définit la classe Room, utilisée pour représenter une pièce dans un jeu.
 Chaque pièce peut avoir un nom,une description,des sorties,des objets,des personnages.
 """
-from characters import Characters
+
 
 class Room:
     """
@@ -84,16 +84,17 @@ Une pièce a un nom, une description, des sorties, des objets, des personnages,.
         if not self.objet:
             return "Votre salle est vide."
         object_string = "Il y a les items suivants :\n"
-        items = [f"  - {item}" for item in self.objet.values()]  # Utilisation d'une liste pour stocker les items
+        items = [f"  - {item}" for item in self.objet.values()]
         object_string += "\n".join(items)  # Utilisation de str.join pour concaténer les éléments
         return object_string
-        
+
 
     def personnages(self):
+        """Retourne une liste des personnages présents dans la salle, s'il y en a."""
         if not self.characters:
-            return "il n'y a pas de pnj"
-        else:
-            pnj = "il y a les personnages :\n"
-            for characters in self.characters.values():
-                pnj += f"\n  - {characters.name}  {characters.description} , personnage {characters.status}"
-            return pnj
+            return "Il n'y a pas de PNJ."
+        pnj = "Il y a les personnages :\n"
+        for character in self.characters.values():
+            pnj += (f"\n  - {character.name}  {character.description}, "
+                f"personnage {character.status}")
+        return pnj

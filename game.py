@@ -6,7 +6,6 @@ from actions import Actions
 from item import Item
 from characters import Characters
 from portail import Portail
-from ennemis import Ennemis
 class Game:
     """
         Initializes the Game class with default values:
